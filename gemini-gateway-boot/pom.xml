@@ -14,8 +14,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.gls.gemini.boot.core</groupId>
-            <artifactId>gemini-boot-core</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gls.gemini.boot.cloud</groupId>
+            <artifactId>gemini-boot-cloud</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gls.gemini.gateway.sdk</groupId>

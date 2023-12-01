@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: gemini-gateway-boot
+  profiles:
+    active: dev
+    include: cloud
