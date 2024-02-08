@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * open api 监听器
+ */
 @Component
 public class OpenApiListener implements ApplicationListener<RefreshRoutesEvent> {
     /**
@@ -54,6 +57,5 @@ public class OpenApiListener implements ApplicationListener<RefreshRoutesEvent> 
                 });
         // 设置接口文档url
         swaggerUiConfigProperties.setUrls(urls);
-
     }
 }
