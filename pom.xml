@@ -11,11 +11,14 @@
 
     <groupId>com.gls.gemini.gateway</groupId>
     <artifactId>gemini-gateway</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <name>Gemini Gateway</name>
+    <description>网关服务</description>
+
     <modules>
         <module>gemini-gateway-boot</module>
         <module>gemini-gateway-sdk</module>
     </modules>
-
-
 </project>

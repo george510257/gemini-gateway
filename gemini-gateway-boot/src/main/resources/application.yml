@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gemini-gateway-boot
+    name: gemini-gateway
   profiles:
     active: dev
     include: cloud
