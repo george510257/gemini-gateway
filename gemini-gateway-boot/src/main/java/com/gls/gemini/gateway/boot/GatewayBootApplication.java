@@ -4,12 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * 网关启动类
+ * Gemini Gateway启动类
+ *
+ * @author gemini 自动生成
+ * @version 0.0.1-SNAPSHOT
+ * @date 2024-02-18
  */
 @SpringBootApplication
 public class GatewayBootApplication {
     /**
-     * 网关启动入口
+     * Gemini Gateway启动入口
      *
      * @param args 启动参数
      */

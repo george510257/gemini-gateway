@@ -11,7 +11,7 @@ import java.util.List;
  * open api 配置
  */
 @Configuration
-public class OpenApiConfig {
+public class GatewayOpenApiConfig {
 
     /**
      * 聚合多个服务的接口文档
