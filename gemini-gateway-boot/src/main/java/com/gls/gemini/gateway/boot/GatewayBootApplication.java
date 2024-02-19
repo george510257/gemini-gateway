@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author gemini 自动生成
  * @version 0.0.1-SNAPSHOT
- * @date 2024-02-18
+ * @date 2024-02-19
  */
 @SpringBootApplication
 public class GatewayBootApplication {
