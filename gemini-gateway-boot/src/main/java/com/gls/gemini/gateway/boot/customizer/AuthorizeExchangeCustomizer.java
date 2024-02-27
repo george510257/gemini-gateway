@@ -12,7 +12,7 @@ public class AuthorizeExchangeCustomizer implements Customizer<ServerHttpSecurit
         // 不需要认证的请求 /gemini-uaa/**
         spec.pathMatchers(CommonConstants.UAA_SERVICE_ID + "/**").permitAll();
         // 不需要认证的请求 /swagger-ui/** /v3/api-docs/**
-        spec.pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
+        spec.pathMatchers("/webjars/**", "/v3/api-docs/**", "/swagger-ui.html", "/*/v3/api-docs/**").permitAll();
         // 所有请求都需要认证
         spec.anyExchange().authenticated();
     }
