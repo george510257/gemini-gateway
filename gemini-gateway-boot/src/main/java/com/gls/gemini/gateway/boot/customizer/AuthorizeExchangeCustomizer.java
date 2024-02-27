@@ -11,8 +11,12 @@ public class AuthorizeExchangeCustomizer implements Customizer<ServerHttpSecurit
     public void customize(ServerHttpSecurity.AuthorizeExchangeSpec spec) {
         // 不需要认证的请求 /gemini-uaa/**
         spec.pathMatchers(CommonConstants.UAA_SERVICE_ID + "/**").permitAll();
-        // 不需要认证的请求 /swagger-ui/** /v3/api-docs/**
-        spec.pathMatchers("/webjars/**", "/v3/api-docs/**", "/swagger-ui.html", "/*/v3/api-docs/**").permitAll();
+        // 不需要认证的请求 /actuator/**
+        spec.pathMatchers("/actuator/**").permitAll();
+        // 不需要认证的请求 /webjars/** /swagger-ui.html
+        spec.pathMatchers("/webjars/**", "/swagger-ui.html").permitAll();
+        // 不需要认证的请求 /*/v3/api-docs/** /v3/api-docs/**
+        spec.pathMatchers("/*/v3/api-docs/**", "/v3/api-docs/**").permitAll();
         // 所有请求都需要认证
         spec.anyExchange().authenticated();
     }

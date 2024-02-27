@@ -31,6 +31,6 @@ public class OAuth2ResourceServerCustomizer implements Customizer<ServerHttpSecu
                 .flatMap(serviceId -> discoveryClient.getInstances(serviceId).stream())
                 .map(serviceInstance -> StrUtil.format(URL_TEMPLATE, serviceInstance.getHost(), serviceInstance.getPort()))
                 .findAny()
-                .orElse("http://localhost:8080/oauth2/jwks");
+                .orElse("http://localhost:8082/oauth2/jwks");
     }
 }
