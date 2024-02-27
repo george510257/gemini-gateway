@@ -69,7 +69,7 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
                         // 设置网关地址
                         Map<String, String> gatewayServer = new HashMap<>();
                         gatewayServer.put("url", gatewayUrl);
-                        gatewayServer.put("description", "gateway server url");
+                        gatewayServer.put("description", "Gateway server url");
                         servers.add(gatewayServer);
                         // 返回修改后的响应数据
                         result = JSONUtil.toJsonStr(map);
