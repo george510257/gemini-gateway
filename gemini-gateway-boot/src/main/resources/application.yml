@@ -42,10 +42,7 @@ gemini:
         name: "Gemini Gateway"
         email: "gemini@glseven.com"
         url: "https://www.glseven.com"
-      license:
-        name: "Apache License 2.0"
-        url: "https://www.apache.org/licenses/LICENSE-2.0.html"
-        identifier: "Apache-2.0"
+
 server:
   port: 8080
 logging:
