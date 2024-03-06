@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Gemini Gatewaysdk自动配置
+ * Gemini Gateway Sdk自动配置
  *
  * @author gemini 自动生成
  * @version 0.0.1-SNAPSHOT

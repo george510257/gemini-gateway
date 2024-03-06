@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Gemini Gateway启动类
+ * Gemini Gateway 启动类
  *
  * @author gemini 自动生成
  * @version 0.0.1-SNAPSHOT
