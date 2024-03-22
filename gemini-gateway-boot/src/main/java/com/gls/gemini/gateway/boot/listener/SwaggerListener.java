@@ -13,10 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * open api 监听器
+ * Swagger 监听器
  */
 @Component
-public class OpenApiListener implements ApplicationListener<RefreshRoutesEvent> {
+public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> {
     /**
      * 路由定位器
      */

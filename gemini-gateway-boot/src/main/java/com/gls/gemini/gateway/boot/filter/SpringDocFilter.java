@@ -8,7 +8,7 @@ import org.reactivestreams.Publisher;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -27,11 +27,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * SpringDoc 过滤器
+ */
+@Order(-1)
 @Component
-public class SpringDocFilter implements GlobalFilter, Ordered {
+public class SpringDocFilter implements GlobalFilter {
+    /**
+     * SpringDoc 配置属性
+     */
     @Resource
     private SpringDocConfigProperties springDocConfigProperties;
 
+    /**
+     * 过滤器
+     *
+     * @param exchange 请求和响应的交换信息
+     * @param chain    过滤器链
+     * @return Mono<Void> 对象
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String apiDocsPath = springDocConfigProperties.getApiDocs().getPath();
@@ -84,8 +98,4 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange.mutate().response(decoratedResponse).build());
     }
 
-    @Override
-    public int getOrder() {
-        return -1;
-    }
 }
