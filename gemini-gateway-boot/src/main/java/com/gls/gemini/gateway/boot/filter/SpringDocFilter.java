@@ -3,24 +3,15 @@ package com.gls.gemini.gateway.boot.filter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
-import lombok.RequiredArgsConstructor;
 import org.reactivestreams.Publisher;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyResponseBodyGatewayFilterFactory;
 import org.springframework.core.Ordered;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.DefaultDataBufferFactory;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +19,50 @@ import java.util.Map;
 /**
  * SpringDoc 过滤器
  */
-@RequiredArgsConstructor
 public class SpringDocFilter implements GlobalFilter, Ordered {
-
+    /**
+     * 接口文档路径
+     */
     private final String apiDocsPath;
+    /**
+     * 网关过滤器
+     */
+    private final GatewayFilter delegate;
+
+    /**
+     * 构造方法
+     *
+     * @param apiDocsPath 接口文档路径
+     * @param factory     网关过滤器工厂
+     */
+    public SpringDocFilter(String apiDocsPath, ModifyResponseBodyGatewayFilterFactory factory) {
+        this.apiDocsPath = apiDocsPath;
+        this.delegate = factory.apply(config -> config.setRewriteFunction(String.class, String.class, this::rewriteFunction));
+    }
+
+    /**
+     * 重写函数 用于修改响应数据
+     * 添加网关地址
+     *
+     * @param exchange 请求和响应的交换信息
+     * @param result   响应数据
+     * @return Publisher<String> 对象
+     */
+    private Publisher<String> rewriteFunction(ServerWebExchange exchange, String result) {
+        // 获取响应数据
+        Map<String, Object> map = JSONUtil.toBean(result, new TypeReference<>() {
+        }, false);
+        // 获取接口文档地址
+        List<Map<String, String>> servers = BeanUtil.getProperty(map, "servers");
+        // 设置网关地址
+        Map<String, String> gatewayServer = new HashMap<>();
+        gatewayServer.put("url", exchange.getRequest().getURI().toString().replace(apiDocsPath, ""));
+        gatewayServer.put("description", "Gateway server url");
+        servers.add(gatewayServer);
+        // 返回修改后的响应数据
+        return Mono.just(JSONUtil.toJsonStr(map));
+
+    }
 
     /**
      * 过滤器
@@ -46,49 +77,8 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
         if (!exchange.getRequest().getURI().getPath().contains(apiDocsPath)) {
             return chain.filter(exchange);
         }
-        // 获取请求和响应
-        ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
-        URI uri = request.getURI();
-        // 获取网关地址
-        String gatewayUrl = uri.toString().replace(apiDocsPath, "");
-        // 获取响应数据
-        DataBufferFactory bufferFactory = response.bufferFactory();
-        ServerHttpResponseDecorator decoratedResponse = new ServerHttpResponseDecorator(response) {
-            @Override
-            public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
-                // 如果响应数据是 Flux 类型
-                if (body instanceof Flux<? extends DataBuffer> fluxBody) {
-                    return super.writeWith(fluxBody.buffer().map(dataBuffer -> {
-                        // 获取响应数据
-                        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
-                        DataBuffer join = dataBufferFactory.join(dataBuffer);
-                        // 读取响应数据
-                        byte[] content = new byte[join.readableByteCount()];
-                        join.read(content);
-                        DataBufferUtils.release(join);
-                        // 修改响应数据
-                        String result = new String(content, StandardCharsets.UTF_8);
-                        Map<String, Object> map = JSONUtil.toBean(result, new TypeReference<>() {
-                        }, false);
-                        // 获取接口文档地址
-                        List<Map<String, String>> servers = BeanUtil.getProperty(map, "servers");
-                        // 设置网关地址
-                        Map<String, String> gatewayServer = new HashMap<>();
-                        gatewayServer.put("url", gatewayUrl);
-                        gatewayServer.put("description", "Gateway server url");
-                        servers.add(gatewayServer);
-                        // 返回修改后的响应数据
-                        result = JSONUtil.toJsonStr(map);
-                        byte[] uppedContent = result.getBytes(StandardCharsets.UTF_8);
-                        response.getHeaders().setContentLength(uppedContent.length);
-                        return bufferFactory.wrap(uppedContent);
-                    }));
-                }
-                return super.writeWith(body);
-            }
-        };
-        return chain.filter(exchange.mutate().response(decoratedResponse).build());
+        // 修改响应数据
+        return delegate.filter(exchange, chain);
     }
 
     @Override
