@@ -3,9 +3,8 @@ package com.gls.gemini.gateway.boot.filter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONUtil;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.reactivestreams.Publisher;
-import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -16,7 +15,6 @@ import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,13 +28,10 @@ import java.util.Map;
 /**
  * SpringDoc 过滤器
  */
-@Component
+@RequiredArgsConstructor
 public class SpringDocFilter implements GlobalFilter, Ordered {
-    /**
-     * SpringDoc 配置属性
-     */
-    @Resource
-    private SpringDocConfigProperties springDocConfigProperties;
+
+    private final String apiDocsPath;
 
     /**
      * 过滤器
@@ -47,7 +42,6 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
      */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String apiDocsPath = springDocConfigProperties.getApiDocs().getPath();
         // 如果请求路径不包含接口文档路径，则直接放行
         if (!exchange.getRequest().getURI().getPath().contains(apiDocsPath)) {
             return chain.filter(exchange);

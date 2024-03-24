@@ -1,25 +1,24 @@
-package com.gls.gemini.gateway.boot.listener;
+package com.gls.gemini.gateway.boot.config;
 
-import cn.hutool.core.util.StrUtil;
+import com.gls.gemini.gateway.boot.filter.SpringDocFilter;
 import jakarta.annotation.Resource;
 import org.springdoc.core.properties.AbstractSwaggerUiConfigProperties;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
-import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Swagger 监听器
- */
-@Component
-public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> {
+@Configuration
+public class SpringDocConfig {
+
     /**
-     * 路由定位器
+     * 路由定义定位器
      */
     @Resource
     private RouteDefinitionLocator routeDefinitionLocator;
@@ -29,6 +28,9 @@ public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> 
     @Resource
     private SwaggerUiConfigProperties swaggerUiConfigProperties;
 
+    /**
+     * SpringDoc 配置属性
+     */
     @Resource
     private SpringDocConfigProperties springDocConfigProperties;
 
@@ -37,19 +39,23 @@ public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> 
      *
      * @param event 路由事件
      */
-    @Override
+    @EventListener(classes = RefreshRoutesEvent.class)
     public void onApplicationEvent(RefreshRoutesEvent event) {
         Set<AbstractSwaggerUiConfigProperties.SwaggerUrl> urls = new HashSet<>();
+        String apiDocsPath = springDocConfigProperties.getApiDocs().getPath();
         // 获取路由定义
         routeDefinitionLocator.getRouteDefinitions()
-                .map(routeDefinition -> routeDefinition.getUri().getHost())
-                .filter(StrUtil::isNotBlank)
-                .distinct()
-                .subscribe(host -> {
+                .subscribe(definition -> {
+                    String host = definition.getUri().getAuthority();
                     // 聚合接口文档url
-                    urls.add(new AbstractSwaggerUiConfigProperties.SwaggerUrl(host, "/" + host + springDocConfigProperties.getApiDocs().getPath(), host));
+                    urls.add(new AbstractSwaggerUiConfigProperties.SwaggerUrl(host, host + apiDocsPath, host));
                 });
         // 设置接口文档url
         swaggerUiConfigProperties.setUrls(urls);
+    }
+
+    @Bean
+    public SpringDocFilter springDocFilter() {
+        return new SpringDocFilter(springDocConfigProperties.getApiDocs().getPath());
     }
 }
