@@ -3,6 +3,7 @@ package com.gls.gemini.gateway.boot.listener;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 import org.springdoc.core.properties.AbstractSwaggerUiConfigProperties;
+import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
@@ -28,6 +29,9 @@ public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> 
     @Resource
     private SwaggerUiConfigProperties swaggerUiConfigProperties;
 
+    @Resource
+    private SpringDocConfigProperties springDocConfigProperties;
+
     /**
      * 刷新路由事件
      *
@@ -43,7 +47,7 @@ public class SwaggerListener implements ApplicationListener<RefreshRoutesEvent> 
                 .distinct()
                 .subscribe(host -> {
                     // 聚合接口文档url
-                    urls.add(new AbstractSwaggerUiConfigProperties.SwaggerUrl(host, "/" + host + "/v3/api-docs", host));
+                    urls.add(new AbstractSwaggerUiConfigProperties.SwaggerUrl(host, "/" + host + springDocConfigProperties.getApiDocs().getPath(), host));
                 });
         // 设置接口文档url
         swaggerUiConfigProperties.setUrls(urls);

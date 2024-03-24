@@ -8,7 +8,7 @@ import org.reactivestreams.Publisher;
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -30,9 +30,8 @@ import java.util.Map;
 /**
  * SpringDoc 过滤器
  */
-@Order(-1)
 @Component
-public class SpringDocFilter implements GlobalFilter {
+public class SpringDocFilter implements GlobalFilter, Ordered {
     /**
      * SpringDoc 配置属性
      */
@@ -98,4 +97,8 @@ public class SpringDocFilter implements GlobalFilter {
         return chain.filter(exchange.mutate().response(decoratedResponse).build());
     }
 
+    @Override
+    public int getOrder() {
+        return -1;
+    }
 }
