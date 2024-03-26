@@ -34,6 +34,7 @@ public class OAuth2ResourceServerCustomizer implements Customizer<ServerHttpSecu
      * @param spec jwt规范
      */
     private void jwtCustomize(ServerHttpSecurity.OAuth2ResourceServerSpec.JwtSpec spec) {
+        // 配置jwt
         String jwkSetUri = discoveryClient.getInstances(CommonConstants.UAA_SERVICE_ID).stream()
                 .findFirst()
                 .map(instance -> instance.getUri() + CommonConstants.JWK_SET_URI)

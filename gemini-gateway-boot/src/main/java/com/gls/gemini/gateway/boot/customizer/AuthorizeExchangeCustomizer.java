@@ -17,6 +17,7 @@ public class AuthorizeExchangeCustomizer implements Customizer<ServerHttpSecurit
      */
     @Override
     public void customize(ServerHttpSecurity.AuthorizeExchangeSpec spec) {
+        // 配置请求授权
         spec.pathMatchers("/swagger-ui.html", "/v3/api-docs/**", "/webjars/**").permitAll()
                 .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers("/*/v3/api-docs/**", "/" + CommonConstants.UAA_SERVICE_ID + "/**").permitAll()

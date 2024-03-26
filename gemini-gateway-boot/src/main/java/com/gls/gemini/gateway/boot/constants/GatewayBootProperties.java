@@ -13,6 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties(prefix = CommonConstants.BASE_PROPERTIES_PREFIX + ".gateway")
 public class GatewayBootProperties extends BaseProperties {
-
+    /**
+     * jwt签名密钥
+     */
     private String jwkSetUri = "http://localhost:8082/oauth2/jwks";
 }
