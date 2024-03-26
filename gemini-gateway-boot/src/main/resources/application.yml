@@ -47,6 +47,10 @@ gemini:
       ignore-patterns:
         - /*/v3/api-docs/**
         - /gemini-uaa/**
+      ignore-urls:
+        - /swagger-ui.html
+        - /webjars/**
+        - /v3/api-docs/**
 
 server:
   port: 8080
