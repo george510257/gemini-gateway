@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 网关配置
  */
@@ -17,4 +20,8 @@ public class GatewayBootProperties extends BaseProperties {
      * jwt签名密钥
      */
     private String jwkSetUri = "http://localhost:8082/oauth2/jwks";
+    /**
+     * 忽略的url
+     */
+    private List<String> ignoreUrls = new ArrayList<>();
 }

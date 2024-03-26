@@ -42,7 +42,14 @@ gemini:
         name: "Gemini Gateway"
         email: "gemini@glseven.com"
         url: "https://www.glseven.com"
-
+  gateway:
+    ignore-urls:
+      - /v3/api-docs/**
+      - /webjars/**
+      - /swagger-ui.html
+      - /actuator/**
+      - /*/v3/api-docs/**
+      - /gemini-uaa/**
 server:
   port: 8080
 logging:
