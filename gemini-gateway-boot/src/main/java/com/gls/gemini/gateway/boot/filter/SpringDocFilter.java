@@ -81,6 +81,11 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
         return delegate.filter(exchange, chain);
     }
 
+    /**
+     * 获取过滤器顺序
+     *
+     * @return 过滤器顺序
+     */
     @Override
     public int getOrder() {
         return -1;
