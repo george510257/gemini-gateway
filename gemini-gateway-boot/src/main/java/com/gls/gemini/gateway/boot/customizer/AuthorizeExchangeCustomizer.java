@@ -13,6 +13,9 @@ import java.util.List;
  */
 @Component
 public class AuthorizeExchangeCustomizer implements Customizer<ServerHttpSecurity.AuthorizeExchangeSpec> {
+    /**
+     * 网关启动属性
+     */
     @Resource
     private GatewayBootProperties gatewayBootProperties;
 
@@ -26,8 +29,10 @@ public class AuthorizeExchangeCustomizer implements Customizer<ServerHttpSecurit
         // 配置请求授权
         List<String> ignoreUrls = gatewayBootProperties.getIgnoreUrls();
         if (ignoreUrls != null && !ignoreUrls.isEmpty()) {
+            // 忽略的url
             spec.pathMatchers(ignoreUrls.toArray(new String[0])).permitAll();
         }
+        // 其他请求需要认证
         spec.anyExchange().authenticated();
     }
 }

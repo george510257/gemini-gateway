@@ -13,8 +13,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OAuth2ResourceServerCustomizer implements Customizer<ServerHttpSecurity.OAuth2ResourceServerSpec> {
+    /**
+     * 网关启动属性
+     */
     @Resource
     private GatewayBootProperties gatewayBootProperties;
+    /**
+     * 服务发现客户端
+     */
     @Resource
     private DiscoveryClient discoveryClient;
 
@@ -25,6 +31,7 @@ public class OAuth2ResourceServerCustomizer implements Customizer<ServerHttpSecu
      */
     @Override
     public void customize(ServerHttpSecurity.OAuth2ResourceServerSpec spec) {
+        // 配置jwt
         spec.jwt(this::jwtCustomize);
     }
 
@@ -35,10 +42,15 @@ public class OAuth2ResourceServerCustomizer implements Customizer<ServerHttpSecu
      */
     private void jwtCustomize(ServerHttpSecurity.OAuth2ResourceServerSpec.JwtSpec spec) {
         // 配置jwt
-        String jwkSetUri = discoveryClient.getInstances(CommonConstants.UAA_SERVICE_ID).stream()
+        String jwkSetUri = discoveryClient.getInstances(CommonConstants.UAA_SERVICE_ID)
+                .stream()
+                // 获取第一个实例
                 .findFirst()
+                // 获取uri
                 .map(instance -> instance.getUri() + CommonConstants.JWK_SET_URI)
+                // 如果没有获取到则使用默认值
                 .orElse(gatewayBootProperties.getJwkSetUri());
+        // 设置jwkSetUri
         spec.jwkSetUri(jwkSetUri);
     }
 }

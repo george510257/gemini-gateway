@@ -36,7 +36,9 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
      * @param factory     网关过滤器工厂
      */
     public SpringDocFilter(String apiDocsPath, ModifyResponseBodyGatewayFilterFactory factory) {
+        // 设置接口文档路径
         this.apiDocsPath = apiDocsPath;
+        // 设置网关过滤器
         this.delegate = factory.apply(config -> config.setRewriteFunction(String.class, String.class, this::rewriteFunction));
     }
 
@@ -56,8 +58,11 @@ public class SpringDocFilter implements GlobalFilter, Ordered {
         List<Map<String, String>> servers = BeanUtil.getProperty(map, "servers");
         // 设置网关地址
         Map<String, String> gatewayServer = new HashMap<>();
+        // 设置网关地址
         gatewayServer.put("url", exchange.getRequest().getURI().toString().replace(apiDocsPath, ""));
+        // 设置网关描述
         gatewayServer.put("description", "Gateway server url");
+        // 添加网关地址
         servers.add(gatewayServer);
         // 返回修改后的响应数据
         return Mono.just(JSONUtil.toJsonStr(map));
