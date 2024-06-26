@@ -45,7 +45,7 @@ public class DemoController {
     @Operation(summary = "getAuthentication", description = "getAuthentication")
     public Mono<Object> getAuthentication(Authentication authentication) {
         if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
-            return Mono.just(jwtAuthenticationToken.getToken().getClaims().get("user_info"));
+            return Mono.just(jwtAuthenticationToken.getToken().getClaims().get("user"));
         }
         if (authentication instanceof UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
             return Mono.just(usernamePasswordAuthenticationToken.getPrincipal());
