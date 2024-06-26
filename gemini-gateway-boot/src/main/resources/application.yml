@@ -42,7 +42,7 @@ gemini:
         name: "Gemini Gateway"
         email: "gemini@glseven.com"
         url: "https://www.glseven.com"
-  gateway:
+  security:
     ignore-urls:
       - /v3/api-docs/**
       - /webjars/**
